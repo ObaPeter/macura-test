@@ -28,7 +28,7 @@ public class YellowCabService {
 
     public List<YellowCabResponse> getComputedData() throws IOException, InterruptedException {
 
-        GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("src/main/resources/auth-key.json"))
+        GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("classpath:auth-key.json"))
                 .createScoped("https://www.googleapis.com/auth/bigquery");
 
         BigQuery bigquery = BigQueryOptions.newBuilder().setProjectId(projectId).setCredentials(credentials).build().getService();
