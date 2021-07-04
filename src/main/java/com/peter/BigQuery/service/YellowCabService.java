@@ -8,6 +8,7 @@ import com.google.cloud.bigquery.QueryJobConfiguration;
 import com.peter.BigQuery.domain.YellowCabResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
@@ -28,7 +29,11 @@ public class YellowCabService {
 
     public List<YellowCabResponse> getComputedData() throws IOException, InterruptedException {
 
-        GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("classpath:auth-key.json"))
+        // File keyStore = new ResourceUtils.getFile("classpath:auth-key.json");
+
+
+
+        GoogleCredentials credentials = GoogleCredentials.fromStream(new ClassPathResource("auth-key.json").getInputStream())
                 .createScoped("https://www.googleapis.com/auth/bigquery");
 
         BigQuery bigquery = BigQueryOptions.newBuilder().setProjectId(projectId).setCredentials(credentials).build().getService();
