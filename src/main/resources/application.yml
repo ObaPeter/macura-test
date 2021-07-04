@@ -1,5 +1,3 @@
-server:
-  port: 29182
 
 app:
   big-query:

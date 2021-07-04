@@ -5,6 +5,8 @@ COPY pom.xml /build/
 #ADD  config /build/config
 COPY src /build/src
 WORKDIR /build/
+ENV PORT 8080
+ENV HOST 0.0.0.0
 RUN mvn -B -f ./pom.xml clean package -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 #Production packaging
