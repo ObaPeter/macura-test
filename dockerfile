@@ -1,23 +1,18 @@
-# Use the official maven/Java 8 image to create a build artifact.
-# https://hub.docker.com/_/maven
-FROM maven:3.8-jdk-11 as builder
+#Build environment
+#FROM maven:3.5.2-jdk-8-alpine AS MAVEN_BUILD
+FROM maven:3.6.3-jdk-11 AS MAVEN_BUILD
+COPY pom.xml /build/
+#ADD  config /build/config
+COPY src /build/src
+WORKDIR /build/
+ENV PORT 8080
+RUN mvn -B -f ./pom.xml clean package -DskipTests
+RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
+#Production packaging
+FROM openjdk:11.0.4-jre-slim-buster
 
-# Copy local code to the container image.
-WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-
-# Build a release artifact.
-RUN mvn package -DskipTests
-
-# Use AdoptOpenJDK for base image.
-# It's important to use OpenJDK 8u191 or above that has container support enabled.
-# https://hub.docker.com/r/adoptopenjdk/openjdk8
-# https://docs.docker.com/develop/develop-images/multistage-build/#use-multi-stage-builds
-FROM adoptopenjdk/openjdk11:alpine-jre
-
-# Copy the jar to the production image from the builder stage.
-COPY --from=builder /app/target/BigQuery-0.0.1-SNAPSHOT-*.jar /BigQuery-0.0.1-SNAPSHOT.jar
-
-# Run the web service on container startup.
-CMD ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/BigQuery-0.0.1-SNAPSHOT.jar"]
+ARG DEPENDENCY=target/dependency
+#COPY config/bootstrap.yml /app/config/bootstrap.yml
+COPY --from=MAVEN_BUILD /build/target/BigQuery-0.0.1-SNAPSHOT.jar /BigQuery-0.0.1-SNAPSHOT.jar
+RUN ls ./
+ENTRYPOINT ["java", "-jar", "BigQuery-0.0.1-SNAPSHOT.jar"]
