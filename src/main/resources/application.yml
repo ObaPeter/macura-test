@@ -1,0 +1,9 @@
+server:
+  port: 29182
+
+app:
+  big-query:
+    project-id: meta-century-318616
+    query: 'SELECT passengerCount, numberOfTrips, totalTimeInMinutes, numberOfCabsRequired FROM `meta-century-318616.NYC_Yellow_Summary_2016.LIBERTY MEDIA` ORDER BY passengerCount'
+
+
