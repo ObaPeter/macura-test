@@ -20,7 +20,7 @@ public class BigQueryService {
     // private final Credentials credential;
 
     public void CallSQL() throws InterruptedException, IOException {
-        GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("src/main/resources/auth-key.json"))
+        GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("classpath:auth-key.json"))
                 .createScoped("https://www.googleapis.com/auth/bigquery");
 
         System.out.println(credentials);
